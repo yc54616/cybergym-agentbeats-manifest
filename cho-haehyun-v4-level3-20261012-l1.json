@@ -1,0 +1,77 @@
+{
+  "config_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "assessment_id": {
+        "type": "string"
+      },
+      "authority_token": {
+        "secret": true,
+        "type": "string"
+      },
+      "green_image_sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "openrouter_api_key": {
+        "secret": true,
+        "type": "string"
+      }
+    },
+    "required": [
+      "openrouter_api_key",
+      "authority_token",
+      "assessment_id",
+      "green_image_sha256"
+    ],
+    "type": "object"
+  },
+  "exports": {
+    "a2a": "a2a"
+  },
+  "manifest_version": "0.1.0",
+  "program": {
+    "entrypoint": [
+      "python",
+      "-m",
+      "cybergym_eval.agentbeats_production_server"
+    ],
+    "env": {
+      "CYBERGYM_ASSESSMENT_ID": "${config.assessment_id}",
+      "CYBERGYM_AUTHORITY_TOKEN": "${config.authority_token}",
+      "CYBERGYM_AUTHORITY_URL": "https://pharmacodynamical-candyce-unconcordant.ngrok-free.dev/v1/admit",
+      "CYBERGYM_CARD_URL": "http://127.0.0.1:9009/",
+      "CYBERGYM_GREEN_IMAGE_SHA256": "${config.green_image_sha256}",
+      "CYBERGYM_LANES": "1",
+      "CYBERGYM_MAX_COST_USD": "1.00",
+      "CYBERGYM_MAX_FEEDBACK": "40",
+      "CYBERGYM_MAX_STEPS": "150",
+      "CYBERGYM_MODEL": "deepseek/deepseek-v4.1-flash",
+      "CYBERGYM_PURPLE_IMAGE_SHA256": "c75d2f019b58f2e53c25940d59bda40e18c774f01cf46de878f00052292645a6",
+      "CYBERGYM_SOLVER": "v3",
+      "CYBERGYM_WALL_SECONDS": "2700",
+      "OPENROUTER_API_KEY": "${config.openrouter_api_key}"
+    },
+    "image": "ghcr.io/yc54616/cybergym-agentbeats@sha256:c75d2f019b58f2e53c25940d59bda40e18c774f01cf46de878f00052292645a6",
+    "network": {
+      "endpoints": [
+        {
+          "name": "a2a_endpoint",
+          "port": 9009
+        }
+      ]
+    }
+  },
+  "provides": {
+    "a2a": {
+      "endpoint": "a2a_endpoint",
+      "kind": "a2a"
+    }
+  },
+  "slots": {
+    "proxy": {
+      "kind": "a2a",
+      "optional": true
+    }
+  }
+}
